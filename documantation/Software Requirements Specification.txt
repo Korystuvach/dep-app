@@ -1,0 +1,11 @@
+Small business managment applicaton.
+
+1. Add your departments (/departments => 'Add New Department'
+2. Add your employees. You will need to assign each employee to his Department, Full Name, Email and Salary.
+3. Now you can examine how your business is doing:
+    How many employees are working in each department.
+    What is a total due to pay each month to every department.
+    What is and average salary for employee in a specific department
+4. You can UPDATE or DELETE employee's on its personal page (/employee/<employee_id>)
+5. You can UPDATE or DELETE department's on its personal page.(/departments/<department_id>)
+    Transfer all employees to different department before deleting the department
