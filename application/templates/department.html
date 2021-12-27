@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title xmlns="http://www.w3.org/1999/html">Department: {{department_info.dep_name}}</title>
+{% endblock %}
+
+{% block content %}
+<!--   Display department info:-->
+   <div class="dep_emp">
+      <h1>Department: {{ department_info.dep_name }}</h1>
+      <h2>Department ID: {{ department_info.id }}</h2>
+      {% for employee in all_department_employees %}
+         <p><a href="/employees/{{ employee.id }}">{{ employee.name }}</a></p>
+      {% endfor %}
+   </div>
+   <div class="dep_edit">
+      <button type="button"><a href="/departments/{{ department_info.id }}/delete">Delete department</a></button><br>
+      <button type="button>"><a href="/departments/{{ department_info.id }}/update">Update department</a></button>
+   </div>
+{% endblock %}

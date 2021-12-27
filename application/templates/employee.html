@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Employee: {{ employee_info.name }} {{ employee_info.lastname }}</title>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Personal page for each team member</h1>
+        <p>Hi my name is: {{ employee_info.name }} {{ employee_info.lastname }}</p>
+        <p>Salary:{{ employee_info.salary }} </p>
+        <p>Department: {{employee_info.my_department.dep_name }}</p>
+        <p>Hire date : {{ employee_info.hire_date }}</p>
+    </div>
+    <div>
+        <button type="button"><a href="/employees/{{ employee_info['id'] }}/delete"><b>Delete employee</b></a></button>
+        <button type="button"><a href="/employees/{{ employee_info['id'] }}/update"><b>Update employee</b></a></button>
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+<!--Head content:-->
+{% block title %}
+    <title>Cool web development Co. limited ink. Our team</title>
+{% endblock %}
+
+<!--Body content-->
+{% block content %}
+    <div>
+        <h1>Employees list:</h1>
+    <!--    Check if there is at list 1 employee in the database-->
+        {% if all_employees|length > 0 %}
+            {% for employee in all_employees %}
+                <ul>
+                    <li><a href="/employees/{{ employee.id }}">{{ employee.name }}</a></li>
+                </ul>
+            {% endfor %}
+    <!--    If employees list is empty: return text message:-->
+        {% else %}
+            <h2> There are no employees yet.</h2>
+        {% endif %}
+    </div>
+    <div class="add_emp">
+        <button type="button"><a href="/employees/add-employee">ADD EMPLOYEE</a></button>
+    </div>
+{% endblock %}

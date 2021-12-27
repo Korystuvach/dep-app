@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  <title>{{ title }}</title>
+{% endblock %}
+
+{% block content %}
+  <div>
+    <h3>Update Department Information</h3>
+    <form method="POST">
+      <label for="dep_name">New name:</label><br>
+      <input type="text" name="dep_name" id="dep_name" value="{{ department_info.dep_name }}"><br>
+      <input type="submit" value="Save"><br>
+    </form>
+  </div>
+{% endblock %}

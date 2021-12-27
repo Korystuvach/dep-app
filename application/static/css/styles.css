@@ -1,0 +1,100 @@
+html, body {
+    font-family: Tahoma, sans-serif;
+    background-color: #687F9E;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    text-align: left;
+}
+
+
+table, th, td, tr {
+    border: 1px solid black;
+    font-size: large;
+    margin: auto;
+    padding: 20px;
+    border-collapse: collapse;
+    text-decoration: none;
+}
+
+div {
+    margin: 15px;
+}
+
+li a {
+    text-decoration: none;
+}
+
+button {
+    background-color: #63aaca;
+    text-decoration: none;
+    padding: 8px;
+    border: 1px solid #ffb4b4;
+}
+
+button:hover {
+    background-color: cadetblue;
+}
+
+button a {
+    text-decoration: none;
+    text-align: center;
+    color: #ffb4b4;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+/*Navigation Menu*/
+ul#nav_ul {
+    position: sticky;
+    font-size: large;
+    font-weight: bold;
+    background-color: #004849;
+    list-style-type: none;
+    border: 2px solid;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    top: 0;
+}
+
+li.nav_li {
+    display: inline;
+    float: left;
+    border-right: 1px solid #586F7E;
+}
+
+li.nav_li:last-child {
+    border-right: none;
+}
+
+li a.nav_li_a {
+    display: block;
+    color: #ffb4b4;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a.nav_li_a:hover {
+    background-color: #11557C;
+}
+
+li a.nav_li_a.active {
+
+}
+
+/*Footer style*/
+footer.foot {
+    text-align: center;
+    padding: 3px;
+    display: block;
+    text-decoration: none;
+
+}
+
+/* /departments table with departments and corresponding ID */
+.dep_tab {
+    margin: 0;
+    padding: 20px;
+}
+

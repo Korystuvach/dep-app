@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Cool web development Co. limited ink. Web development for everyone</title>
+{% endblock %}
+
+{% block content %}
+    <div class="intro">
+        <h1>Cool web development Co. limited ink. </h1>
+    </div>
+    <div>
+        <h2>Check out our cool departments: <a href="{{ url_for('departments') }}">All departments</a></h2>
+        <h2>All employees: <a href="{{ url_for('employees') }}">All employees</a></h2>
+        <p>Do you want to <a href="{{ url_for('login') }}">Log In?</a>
+    </div>
+{% endblock %}

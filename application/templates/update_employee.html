@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h3>Update employee information</h3>
+        <form method="POST">
+            <label for="department_id">Department ID</label><br>
+            <input type="number" name="department_id" id="department_id" value="{{ employee_info.department_id }}"><br>
+            <label for="salary">Salary</label><br>
+            <input type="number" name="salary" id="salary" value="{{ employee_info.salary }}"><br>
+            <label for="name">Name</label><br>
+            <input type="text" name="name" id="name" value="{{ employee_info.name }}"><br>
+            <label for="lastname">Last Name</label><br>
+            <input type="text" name="lastname" id="lastname" value="{{ employee_info.lastname }}"><br>
+            <input type="submit" value="Save"><br>
+        </form>
+    </div>
+{% endblock %}

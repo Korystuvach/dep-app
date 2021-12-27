@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+<!--Head content:-->
+{% block title %}
+   <title>Cool web development Co. limited ink. All departments</title>
+{% endblock %}
+
+<!--Body content-->
+{% block content %}
+   <div class="dep_tab">
+      <h1>Departments stats: </h1>
+   <!--      List all existing departments:-->
+      <table>
+         <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>№ Employees
+            <th>$ salary</th>
+         </tr>
+         {% if all_departments|length > 0 %}
+         {% for department in all_departments %}
+         <tr>
+            <td>{{ department.id }}</td>
+            <td>><a href="/departments/{{ department.id }}">{{ department.dep_name }}</a></td>
+
+         </tr>>
+         {% endfor %}
+      </table>
+   <!--   If no departments exist yet, notify the user-->
+      {% else %}
+         <p>No departments yet. Create one and it will be displayed here</p>
+      {% endif %}
+   </div>
+   <div id="create_new_department">
+      <button type="button"><a href="/departments/add-department">Create new department</a></button>
+   </div>
+{% endblock %}

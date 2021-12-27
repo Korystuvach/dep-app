@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Add employee</title>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Add New Employee</h1>
+
+<!--"Add new employee" form will send a request to create new employee
+    in the "all_employees" table of the database  -->
+        <form method="POST" id="add_employee_form">
+<!--            Assign an employee to one of the existing departments-->
+            <label for="department_id">Choose <a href="/departments" target="_blank">department:</a></label><br>
+<!--            <input type="number" name="department_id" id="department_id" placeholder="1 - for Coders department"><br>-->
+            <select autofocus name="department_id" id="department_id">
+                {% for department in all_departments %}
+                <option>{{ department.id }}</option>
+                {% endfor %}
+            </select><br>
+<!--            Base Salary. All bonuses will be assigned on top of this salary-->
+            <label for="salary">Set base salary in USD:</label><br>
+            <input type="number" name="salary" id="salary" placeholder="5000$"><br>
+<!--            First Name-->
+            <label for="name">First Name</label><br>
+            <input type="text" name="name" id="name" placeholder="John"><br>
+<!--                Last Name-->
+            <label for="lastname">Last name</label><br>
+            <input type="text" name="lastname" id="lastname" placeholder="Green"><br>
+<!--            Button to send the "POST" request to the app.py-->
+            <input type="submit" value="Add Employee"><br>
+        </form>
+    </div>
+
+<!--        Create a dynamic table with all existing departments-->
+    <div>
+        <h3>Department ID Reference table:</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Department</th>
+            </tr>
+            {% for department in all_departments %}
+                <tr>
+                    <th>{{ department.id }}</th>
+                    <th>{{ department.dep_name }}</th>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

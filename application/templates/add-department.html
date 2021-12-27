@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Add department</title>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Create New Department</h1>
+        <form method="POST">
+            <label for="dep_name">New Department Name:</label><br>
+            <input type="text" autofocus name="dep_name" id="dep_name">
+            <input type="submit">
+        </form>
+    </div>
+{% endblock %}
