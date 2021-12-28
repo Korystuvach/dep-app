@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 
 # Initializing Flask
 app = Flask(__name__)
@@ -10,10 +11,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Turn on lodging all query to the database (SQL language). Turn off in production
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['TESTING'] = True
+
 # Create Instance for SQLAlchemy database
 db = SQLAlchemy(app)
 
-db.create_all()
+# Initialize login
+login_manager = LoginManager()
 
 from application import models, routes
-

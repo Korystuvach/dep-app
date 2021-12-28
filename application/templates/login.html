@@ -12,13 +12,20 @@
             <p class="error">Error:</p> {{ error }}
         {% endif %}
         <form method="post" name="login_form">
-            <dl>
-                <dt>Username:
-                <dd><input type="text" name="username" value="{{ request.form.username }}">
-                <dt>Password:
-                <dd><input type="password" name="password">
-            </dl>
-            <p><input type="submit" value="Login"></p>
+            <table>
+                <tr>
+                    <td>Username:
+                    <td><input type="text" name="username"></td>
+                </tr>
+                <tr>
+                    <td>Password:</td>
+                    <td><input type="password" name="password"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Login"></td>
+                </tr>
+            </table>
         </form>
     </div>
 {% endblock %}

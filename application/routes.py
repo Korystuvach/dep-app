@@ -16,12 +16,32 @@ def index():
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] != 'admin' or request.form['password'] != 'secret':
-            error = 'Invalid credential'
+        password = request.form['password']
+        username = request.form['username']
+
+        if len(username) <= 32 and password:
+            if username != 'admin' or password != 'secret':
+                error = 'Invalid credentials'
+                return render_template('error.html', error=error)
+            else:
+                flash('Welcome user')
+                return redirect(url_for('index'))
         else:
-            flash('Welcome user')
-            return redirect(url_for('index'))
+            error = 'Enter correct username and password'
+            return render_template('error.html', error=error)
     return render_template('login.html', error=error)
+
+
+# Logout user
+@app.route('/logout')
+def logout():
+    pass
+
+
+# Register new user
+@app.route('/register')
+def register():
+    pass
 
 
 # All departments
@@ -31,7 +51,7 @@ def departments():
 
     try:
         all_departments = AllDepartments.query.order_by(AllDepartments.id).all()
-    except:
+    except Exception:
         return '<h1>Database query error<h1>', 500
 
     return render_template('departments.html',
@@ -73,7 +93,7 @@ def add_department():
             db.session.add(new_department)
             db.session.commit()
             return redirect(url_for('departments'))
-        except:
+        except Exception:
             return f'Error. Can not add new department to the database.'
     return render_template('add-department.html')
 
@@ -93,7 +113,7 @@ def update_department(dep_id):
         try:
             db.session.commit()
             return redirect('/departments')
-        except:
+        except Exception:
             return "<h2>Error while updating employee<2>"
     # If request method is GET => send data
     return render_template("update_department.html",
@@ -116,7 +136,7 @@ def delete_department(id):
         db.session.delete(deleted)
         db.session.commit()
         return redirect('/departments')
-    except:
+    except Exception:
         return '<h2>Error. Cant delete department.<h2>' \
                '<h3>Transfer all employees to different department first</h3>'
 
@@ -168,8 +188,9 @@ def add_employee():
             db.session.add(new_employee)
             db.session.commit()
             return redirect('/employees')
-        except:
-            return '<h2>Error: Can not add new employee to the database<h2>'
+        except Exception:
+            error = 'Error: Can not add new employee to the database'
+            return render_template('error.html', error=error)
     return render_template('add-employee.html',
                            all_departments=all_departments)
 
@@ -179,6 +200,7 @@ def add_employee():
 def update_employee(emp_id):
     """Change employee information"""
 
+    error = None
     title = "Update Employee info"
     # Create db object
     employee_info = AllEmployees.query.get(emp_id)
@@ -192,8 +214,9 @@ def update_employee(emp_id):
         try:
             db.session.commit()
             return redirect('/employees')
-        except:
-            return "<h2>Error while updating employee<h2>"
+        except Exception:
+            error = "Error while updating employee"
+            return render_template('error.html', error=error)
     # If request method is GET => send page
     return render_template("update_employee.html",
                            employee_info=employee_info,
@@ -204,11 +227,13 @@ def update_employee(emp_id):
 # DELETE employee from a database
 @app.route('/employees/<int:id>/delete')
 def delete_employee(id):
+    error = None
     # Chose the employee to delete from the db
     deleted = AllEmployees.query.get_or_404(id)
     try:
         db.session.delete(deleted)
         db.session.commit()
         return redirect('/employees')
-    except:
-        return 'Error. Cant delete employee.'
+    except Exception:
+        error = "Error, user is not deleted"
+        return render_template('error.html', error=error)
