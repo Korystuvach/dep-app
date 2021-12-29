@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-
+from flask_migrate import Migrate
 # Initializing Flask
 app = Flask(__name__)
 app.config['SECRET_KEY'] = b'5_#jlsv42;fsd]/2lf*#'
@@ -17,5 +17,8 @@ db = SQLAlchemy(app)
 
 # Initialize login
 login_manager = LoginManager()
+
+# Initialize database migration
+migrate = Migrate(app, db)
 
 from application import models, routes

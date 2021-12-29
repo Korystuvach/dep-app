@@ -53,9 +53,14 @@ class AllDepartments(db.Model):
         """
 
 
-# Create User
+# Create User table
 class User(db.Model, UserMixin):
-    """Handle application Users"""
+    """Handle Users' authentication
+
+    id -- unique user identifier. Generated automatically
+    username -- credentials to log user in. Have to be unique value
+    password -- secret word to identify user.
+    """
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), nullable=False, unique=True)
