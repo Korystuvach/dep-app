@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,32 +9,25 @@
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" type="text/css" >
 
     <!--    title is added on each page separately-->
-    {% block title %}
-    {% endblock %}
+    <title>{% block title %}{% endblock %}</title>
 
-<!--    Show flashing messages if any -->
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class="flashes">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    {% endwith %}
 </head>
+
 <body>
-<nav>
-    <ul id="nav_ul">
-        <li class="nav_li"><a href="{{ url_for('index') }}" class="nav_li_a">Home</a></li>
-        <li class="nav_li"><a href="{{ url_for('employees') }}" class="nav_li_a">Employees</a></li>
-        <li class="nav_li"><a href="{{ url_for('departments') }}" class="nav_li_a">Departments</a></li>
-    </ul>
-</nav>
-    {% block content %}
-    {% endblock %}
-<footer class="foot">
-    <p>&copy Korystuvach 2021</p>>
-</footer>
+    <nav>
+        <ul id="nav_ul">
+            <li class="nav_li"><a href="{{ url_for('index') }}" class="nav_li_a">Home</a></li>
+            <li class="nav_li"><a href="{{ url_for('employees') }}" class="nav_li_a">Employees</a></li>
+            <li class="nav_li"><a href="{{ url_for('departments') }}" class="nav_li_a">Departments</a></li>
+        </ul>
+    </nav>
+
+        {% block content %}
+        {% endblock %}
+
+    <footer class="foot">
+        <p>&copy Korystuvach 2021</p>>
+    </footer>
+
 </body>
 </html>

@@ -5,23 +5,12 @@
 {% endblock %}
 
 {% block content %}
-    <!--    Show flashing messages if any -->
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class="flashes">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    {% endwith %}
-
-    <div class="login">
-        <h1>Login:</h1>
+    <div class="register">
+        <h1>New User:</h1>
         {% if error %}
             <p class="error">Error:</p> {{ error }}
         {% endif %}
-        <form method="post" name="login_form">
+        <form method="POST" name="login_form">
             <table>
                 <tr>
                     <td>Username:
@@ -30,10 +19,13 @@
                 <tr>
                     <td>Password:</td>
                     <td><input type="password" name="password"></td>
+                <tr>
+                    <td>Retype password:</td>
+                    <td><input type="password" name="password2"></td>
                 </tr>
                 <tr>
-                    <td><a href="{{ url_for('register') }}">Register</a></td>
-                    <td><input type="submit" value="Login"></td>
+                    <td></td>
+                    <td><input type="submit" value="Register"></td>
                 </tr>
             </table>
         </form>

@@ -1,14 +1,15 @@
 from flask import request, render_template, url_for, flash, redirect
 
 from application import app, db
-from application.models import AllDepartments, AllEmployees
+from application.models import AllDepartments, AllEmployees, User
 
 
 # Home page
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    return render_template('index.html',
+                           title="Management App.")
 
 
 # Login user
@@ -18,18 +19,28 @@ def login():
     if request.method == 'POST':
         password = request.form['password']
         username = request.form['username']
+        user = User.query.filter_by(username=username)
+        # Check if length of the username and password exists and smaller than 32 and 225
+        if len(username) <= 32 and len(password) <= 225:
+            #  Check if User exits in the database
 
-        if len(username) <= 32 and password:
-            if username != 'admin' or password != 'secret':
+            user = User.query.filter_by(username=username).first()
+            print("here")
+            print(user)
+
+            if username != user.username or password != user.password:
                 error = 'Invalid credentials'
-                return render_template('error.html', error=error)
+                flash(error)
+                # return render_template('error.html', error=error)
             else:
                 flash('Welcome user')
-                return redirect(url_for('index'))
+                # return redirect(url_for('index'))
         else:
             error = 'Enter correct username and password'
             return render_template('error.html', error=error)
-    return render_template('login.html', error=error)
+    return render_template('login.html',
+                           error=error,
+                           title="Log In")
 
 
 # Logout user
@@ -39,9 +50,26 @@ def logout():
 
 
 # Register new user
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    pass
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if password == request.form['password2']:
+            new_user = User(username=username,
+                            password=password
+                            )
+        else:
+            return render_template('error.html', error="Password Retype Incorrect")
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+        except Exception:
+            render_template('error.html', error="Database error. User was now created")
+
+    return render_template('register.html',
+                           title="Register new User"
+                           )
 
 
 # All departments
@@ -55,7 +83,8 @@ def departments():
         return '<h1>Database query error<h1>', 500
 
     return render_template('departments.html',
-                           all_departments=all_departments
+                           all_departments=all_departments,
+                           title="All Departments"
                            )
 
 
@@ -66,12 +95,14 @@ def department(dep_id):
 
     try:
         department_info = AllDepartments.query.get(dep_id)
+        department_name = department_info.dep_name
         all_department_employees = AllEmployees.query.filter_by(department_id=dep_id)
     except:
         return "Database Query Error", 500
     return render_template('department.html',
                            department_info=department_info,
-                           all_department_employees=all_department_employees
+                           all_department_employees=all_department_employees,
+                           title=f"{department_name} Department"
                            )
 
 
@@ -95,7 +126,8 @@ def add_department():
             return redirect(url_for('departments'))
         except Exception:
             return f'Error. Can not add new department to the database.'
-    return render_template('add-department.html')
+    return render_template('add-department.html',
+                           title="Add New Department")
 
 
 # UPDATE department info
@@ -103,7 +135,6 @@ def add_department():
 def update_department(dep_id):
     """Change department information"""
 
-    title = 'Update Department'
     # Create object with new data
     department_info = AllDepartments.query.get(dep_id)
     if request.method == "POST":
@@ -118,7 +149,7 @@ def update_department(dep_id):
     # If request method is GET => send data
     return render_template("update_department.html",
                            department_info=department_info,
-                           title=title
+                           title='Update Department'
                            )
 
 
@@ -137,8 +168,9 @@ def delete_department(id):
         db.session.commit()
         return redirect('/departments')
     except Exception:
-        return '<h2>Error. Cant delete department.<h2>' \
-               '<h3>Transfer all employees to different department first</h3>'
+        error='Error. Cant delete department.' \
+               'Transfer all employees to different department first'
+        return render_template("error.html", error=error)
 
 
 # All company employees
