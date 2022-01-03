@@ -1,6 +1,8 @@
 from flask import request, render_template, url_for, flash, redirect
+from werkzeug.security import check_password_hash, generate_password_hash
+from flask_login import login_user, login_required, logout_user
 
-from application import app, db, login_manager
+from application import app, db
 from application.models import AllDepartments, AllEmployees, User
 
 
@@ -12,7 +14,7 @@ def index():
                            title="Management App.")
 
 
-# Login user
+# LOGIN user
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -25,12 +27,13 @@ def login():
 
             #  Check if User exits in the database
             user = User.query.filter_by(username=username).first()
-            if username != user.username or password != user.password:
-                error = 'Invalid credentials'
-                flash(error)
-                # return render_template('error.html', error=error)
+            if check_password_hash(user.password, password):
+                login_user(user)
+                flash("Welcome " + user.username)
+
+                return redirect(url_for('index'))
             else:
-                flash('Welcome user')
+                flash('Wrong credentials')
                 return redirect(url_for('index'))
         else:
             error = 'Enter correct username and password'
@@ -41,37 +44,48 @@ def login():
 
 
 # Logout user
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    pass
+    """Handles user logout"""
+
+    logout_user()
+    return redirect(url_for('index'))
 
 
 # Register new user
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """User registration form
-    """
+
+    username -- mandatory, up to 32 symbols
+    password -- mandatory, will be hashed
+    password2 -- mandatory, used only to check if a user entered desired password"""
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         password2 = request.form['password2']
-        # Check for empty filds in
+        # Check for empty fields in  form
         if not username or not password or not password2:
             flash("Please, fill all fields!")
             return redirect(url_for('register'))
-
-        if password != password2:
+        # Check if user retyped password correctly or made mistake typing desired password
+        elif password != password2:
             return render_template('error.html', error="Password Retype Incorrect")
-
-        new_user = User(username=username,
-                        password=password
-                        )
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-        except Exception:
-            render_template('error.html', error="Database error. User was now created")
-
+        else:
+            # Hash password
+            hash_pwd = generate_password_hash(password)
+            # Create new user object
+            new_user = User(username=username,
+                            password=hash_pwd
+                            )
+            # Push new user object to the database
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+            except Exception:
+                return render_template('error.html', error="Database error. User was now created")
+            return redirect(url_for('login'))
+    # Return registration form if request method is 'GET'
     return render_template('register.html',
                            title="Register new User"
                            )
@@ -189,6 +203,7 @@ def employees():
 
 # Generate uniq page for each employee
 @app.route('/employees/<int:emp_id>')
+@login_required
 def employee(emp_id):
     """ Query employee data from a database, generate uniq page for each employee """
 
@@ -262,11 +277,11 @@ def update_employee(emp_id):
 
 
 # DELETE employee from a database
-@app.route('/employees/<int:id>/delete')
-def delete_employee(id):
+@app.route('/employees/<int:emp_id>/delete')
+def delete_employee(emp_id):
     error = None
     # Chose the employee to delete from the db
-    deleted = AllEmployees.query.get_or_404(id)
+    deleted = AllEmployees.query.get_or_404(emp_id)
     try:
         db.session.delete(deleted)
         db.session.commit()

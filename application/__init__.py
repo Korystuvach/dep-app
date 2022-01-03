@@ -17,6 +17,7 @@ db = SQLAlchemy(app)
 
 # Initialize login manager class to handle user authentication and sessions.
 login_manager = LoginManager()
+login_manager.init_app(app)
 
 # Initialize database migration
 migrate = Migrate(app, db)

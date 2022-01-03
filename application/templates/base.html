@@ -12,10 +12,10 @@
     <title>{% block title %}{% endblock %}</title>
 
 <!--    Show flashing messages if any -->
-     {% with message = get_flashed_messages() %}
-        {% if message %}
+     {% with messages = get_flashed_messages() %}
+        {% if messages %}
             <ul class=flashes>
-            {% for message in get_flashed_messages() %}
+            {% for message in messages %}
                 <li>{{ message }}</li>
             {% endfor %}
             </ul>
