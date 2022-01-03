@@ -45,6 +45,7 @@ def login():
 
 # Logout user
 @app.route('/logout', methods=['GET', 'POST'])
+@login_required
 def logout():
     """Handles user logout"""
 
@@ -109,6 +110,7 @@ def departments():
 
 # Generate specific department web-page
 @app.route('/departments/<int:dep_id>')
+@login_required
 def department(dep_id):
     """Create unique page with statistics and employees for each department"""
 
@@ -127,6 +129,7 @@ def department(dep_id):
 
 # ADD new department
 @app.route('/departments/add-department', methods=['POST', 'GET'])
+@login_required
 def add_department():
     """Add new department.
 
@@ -151,6 +154,7 @@ def add_department():
 
 # UPDATE department info
 @app.route('/departments/<int:dep_id>/update', methods=["POST", "GET"])
+@login_required
 def update_department(dep_id):
     """Change department information"""
 
@@ -174,6 +178,7 @@ def update_department(dep_id):
 
 # Delete department
 @app.route('/departments/<int:id>/delete')
+@login_required
 def delete_department(id):
     """Chose the department to delete from the database by its ID.
 
@@ -216,6 +221,7 @@ def employee(emp_id):
 
 # ADD new employee to the database
 @app.route('/employees/add-employee', methods=['POST', 'GET'])
+@login_required
 def add_employee():
     """Create object 'new_employee' and push it to the database"""
 
@@ -249,6 +255,7 @@ def add_employee():
 
 # UPDATE employee info
 @app.route('/employees/<int:emp_id>/update', methods=["POST", "GET"])
+@login_required
 def update_employee(emp_id):
     """Change employee information"""
 
@@ -278,6 +285,7 @@ def update_employee(emp_id):
 
 # DELETE employee from a database
 @app.route('/employees/<int:emp_id>/delete')
+@login_required
 def delete_employee(emp_id):
     error = None
     # Chose the employee to delete from the db
