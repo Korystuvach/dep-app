@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="register">
-        <h1>New User:</h1>
+        <h1>Register New User:</h1>
         {% if error %}
             <p class="error">Error:</p> {{ error }}
         {% endif %}
@@ -24,7 +24,7 @@
                     <td><input type="password" name="password2"></td>
                 </tr>
                 <tr>
-                    <td></td>
+                    <td><a href="{{ url_for('login') }}">Login</a></td>
                     <td><input type="submit" value="Register"></td>
                 </tr>
             </table>

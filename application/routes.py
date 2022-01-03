@@ -1,6 +1,6 @@
 from flask import request, render_template, url_for, flash, redirect
 
-from application import app, db
+from application import app, db, login_manager
 from application.models import AllDepartments, AllEmployees, User
 
 
@@ -19,22 +19,19 @@ def login():
     if request.method == 'POST':
         password = request.form['password']
         username = request.form['username']
-        user = User.query.filter_by(username=username)
-        # Check if length of the username and password exists and smaller than 32 and 225
+
+        # Check if length of the username and password exists and shorter than 32 and 225
         if len(username) <= 32 and len(password) <= 225:
+
             #  Check if User exits in the database
-
             user = User.query.filter_by(username=username).first()
-            print("here")
-            print(user)
-
             if username != user.username or password != user.password:
                 error = 'Invalid credentials'
                 flash(error)
                 # return render_template('error.html', error=error)
             else:
                 flash('Welcome user')
-                # return redirect(url_for('index'))
+                return redirect(url_for('index'))
         else:
             error = 'Enter correct username and password'
             return render_template('error.html', error=error)
@@ -52,15 +49,23 @@ def logout():
 # Register new user
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    """User registration form
+    """
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if password == request.form['password2']:
-            new_user = User(username=username,
-                            password=password
-                            )
-        else:
+        password2 = request.form['password2']
+        # Check for empty filds in
+        if not username or not password or not password2:
+            flash("Please, fill all fields!")
+            return redirect(url_for('register'))
+
+        if password != password2:
             return render_template('error.html', error="Password Retype Incorrect")
+
+        new_user = User(username=username,
+                        password=password
+                        )
         try:
             db.session.add(new_user)
             db.session.commit()
@@ -91,7 +96,7 @@ def departments():
 # Generate specific department web-page
 @app.route('/departments/<int:dep_id>')
 def department(dep_id):
-    """Create unique page with statistics for each department"""
+    """Create unique page with statistics and employees for each department"""
 
     try:
         department_info = AllDepartments.query.get(dep_id)
