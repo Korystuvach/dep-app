@@ -1,6 +1,6 @@
 from flask import request, render_template, url_for, flash, redirect
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, logout_user, login_required
 
 from application import app, db
 from application.models import AllDepartments, AllEmployees, User
@@ -27,11 +27,13 @@ def login():
 
             #  Check if User exits in the database
             user = User.query.filter_by(username=username).first()
-            if check_password_hash(user.password, password):
+            if user and check_password_hash(user.password, password):
                 login_user(user)
                 flash("Welcome " + user.username)
 
-                return redirect(url_for('index'))
+                next_page = request.args.get('next')
+
+                return redirect(next_page)
             else:
                 flash('Wrong credentials')
                 return redirect(url_for('index'))
@@ -177,22 +179,22 @@ def update_department(dep_id):
 
 
 # Delete department
-@app.route('/departments/<int:id>/delete')
+@app.route('/departments/<int:dep_id>/delete')
 @login_required
-def delete_department(id):
+def delete_department(dep_id):
     """Chose the department to delete from the database by its ID.
 
         You have to transfer all employees to different department first.
         Be careful, deleting department is permanent.
     """
 
-    deleted = AllDepartments.query.get_or_404(id)
+    deleted = AllDepartments.query.get_or_404(dep_id)
     try:
         db.session.delete(deleted)
         db.session.commit()
         return redirect('/departments')
     except Exception:
-        error='Error. Cant delete department.' \
+        error = 'Error. Cant delete department.' \
                'Transfer all employees to different department first'
         return render_template("error.html", error=error)
 
@@ -297,3 +299,12 @@ def delete_employee(emp_id):
     except Exception:
         error = "Error, user is not deleted"
         return render_template('error.html', error=error)
+
+
+# Handle redirect to login page if user has no permission to view requested page
+@app.after_request
+def redirect_to_sign_in(response):
+    if response.status_code == 401:
+        return redirect(url_for('login') + '?next=' + request.url)
+
+    return response
