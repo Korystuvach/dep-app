@@ -1,6 +1,56 @@
-Small business managment applicaton.
+# Small to midsize business management application.
 
-1. Add your departments (/departments => 'Add New Department'
+Content:
+1. General description.
+    1.1 Technology stack used in the project
+    1.2 Project description
+2. User guide.
+
+
+1.1 Technology stack used in the project:
+    - The core of this project is built with Python 3.9.
+    - Main framework: Flask
+                    Flask-Migrate - for database migrations.
+                    Flask-Login - for user authentication.
+                    Jinja2 - for template design.
+                    Werkzeug - for password hashing and security.
+    - Database: SQLite was chosen as a fast and simple database engine.
+              SQLAlchemy Object Relational Mapper is used to handle database.
+
+    - Virtual environment: virtualenv 20.8.1
+
+
+
+1.2 Project description:
+
+
+2. User guide:
+        Installation of Python3.9.
+        You can download required python version from python.org for Windows, Linux or macOS.
+
+
+        Installation of pip.
+        Pip will be installed with python. To update pip use CMD command:
+    python -m pip install --upgrade pip
+
+
+        Initialize virtual environments.
+        Open terminal and switch to the application folder.
+    run:
+            env/Scripts/activate
+        You should now see '(env)' at the beginning of a command prompt in your terminal.
+        To deactivate virtual environment run:
+            deactivate
+        If '(env)' is no longer present in your command prompt - virtual environment is deactivated
+
+
+        Installation of modules.
+        File requirements.txt contains all the modules necessary to run this application.
+    The best way to install all of them in bulk is to use pip. Open terminal and switch
+    to the application folder where requirements.txt is.
+
+Working with application:
+1. Add your departments, navigate to /departments => 'Add New Department'
 2. Add your employees. You will need to assign each employee to his Department, Full Name, Email and Salary.
 3. Now you can examine how your business is doing:
     How many employees are working in each department.

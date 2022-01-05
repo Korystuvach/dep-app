@@ -1,3 +1,14 @@
+"""This classes will specify database structure
+
+Classes:
+    AllEmployees(db.Model)
+    AllDepartments(db.Model)
+    User(db.Model)
+
+If any Changes are made to the class, be sure
+to perform database migration
+"""
+
 from flask_login import UserMixin
 from datetime import date
 
@@ -6,7 +17,7 @@ from application import db, login_manager
 
 # Create baseclass for employees table in db
 class AllEmployees(db.Model):
-    """Specify columns for all_employees table in the database.
+    """Create all_employees table in the database.
 
     id -- unique value (will be generated automatically).
     department_id --  bind employee to department. Create department firs.
@@ -35,10 +46,11 @@ class AllEmployees(db.Model):
 
 # Create baseclass for departments table in db
 class AllDepartments(db.Model):
-    """Specify columns for all_departments table in the database
+    """Create table for all_departments  in the database
 
     id -- Department unique id, generated automatically
-    dep_name -- Name of the department.
+    dep_name -- Name of the department. required to create new department
+    dep_employees_id -- connection with employees table
     """
 
     id = db.Column(db.Integer, primary_key=True)
@@ -55,11 +67,11 @@ class AllDepartments(db.Model):
 
 # Create User table
 class User(db.Model, UserMixin):
-    """Handle Users' authentication
+    """Create table for application users. Handle User's authentication
 
     id -- unique user identifier. Generated automatically
     username -- credentials to log user in. Have to be unique value
-    password -- secret word to identify user.
+    password -- secret word to identify user. Hashed.
     """
 
     id = db.Column(db.Integer, primary_key=True)
@@ -69,4 +81,6 @@ class User(db.Model, UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
+    """Query User info from the database to handle login"""
+
     return User.query.get(user_id)
