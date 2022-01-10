@@ -1,6 +1,7 @@
 from flask import request, render_template, url_for, flash, redirect
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_user, logout_user, login_required
+from sqlalchemy.sql import func
 
 from application import app, db
 from application.models import AllDepartments, AllEmployees, User
@@ -118,14 +119,13 @@ def department(dep_id):
 
     try:
         department_info = AllDepartments.query.get(dep_id)
-        department_name = department_info.dep_name
-        all_department_employees = AllEmployees.query.filter_by(department_id=dep_id)
+        all_salaries = AllEmployees.query.filter_by(department_id=dep_id)
     except:
         return "Database Query Error", 500
     return render_template('department.html',
                            department_info=department_info,
-                           all_department_employees=all_department_employees,
-                           title=f"{department_name} Department"
+                           all_salaries=all_salaries,
+                           title=f"{department_info.dep_name} Department"
                            )
 
 

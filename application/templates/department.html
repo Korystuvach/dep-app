@@ -7,14 +7,28 @@
 {% block content %}
 <!--   Display department info:-->
    <div class="dep_emp">
-      <h1>Department: {{ department_info.dep_name }}</h1>
-      <h2>Department ID: {{ department_info.id }}</h2>
-      {% for employee in all_department_employees %}
-         <p><a href="/employees/{{ employee.id }}">{{ employee.name }}</a></p>
-      {% endfor %}
+       <h1>Department: {{ department_info.dep_name }}</h1>
+       <h2>Department ID: {{ department_info.id }}</h2>
+       <ul>
+       {% for employee in all_department_employees %}
+           <li><a href="/employees/{{ employee.id }}">{{ employee.name }}</a></li>
+       {% endfor %}
+       </ul>
+       <p>Total employees: {{ department_info.dep_employees_id | count }}</p>
+       <table>
+           <tr>
+               <th>Total employees</th>
+               <th>Salaries</th>
+           </tr>
+           <tr>
+               <td> {{ department_info.dep_employees_id | count }} </td>
+               <td> {{ all_salaries}}</td>
+           </tr>
+
+       </table>
    </div>
    <div class="dep_edit">
-      <button type="button"><a href="/departments/{{ department_info.id }}/delete">Delete department</a></button><br>
-      <button type="button"><a href="/departments/{{ department_info.id }}/update">Update department</a></button>
+       <button type="button"><a href="/departments/{{ department_info.id }}/delete">Delete department</a></button><br>
+       <button type="button"><a href="/departments/{{ department_info.id }}/update">Update department</a></button>
    </div>
 {% endblock %}

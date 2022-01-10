@@ -19,9 +19,8 @@
          {% for department in all_departments %}
          <tr>
             <td>{{ department.id }}</td>
-            <td>><a href="/departments/{{ department.id }}">{{ department.dep_name }}</a></td>
-
-         </tr>>
+            <td><a href="/departments/{{ department.id }}">{{ department.dep_name }}</a></td>
+         </tr>
          {% endfor %}
       </table>
    <!--   If no departments exist yet, notify the user-->
