@@ -40,6 +40,11 @@
 
 <!-- Footer navigation menu-->
     <footer class="foot">
+        {% if current_user.is_authenticated %}
+            <p>Hi {{ current_user.username }} <a href="{{ url_for('logout') }}">Log Out?</a></p>
+        {% else %}
+        <p>Do you want to <a href="{{ url_for('login') }}">Log In?</a>
+        {% endif %}
         <p>&copy Korystuvach 2021</p>
     </footer>
 

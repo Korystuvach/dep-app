@@ -2,12 +2,13 @@ from flask import request, render_template, url_for, flash, redirect
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_user, logout_user, login_required
 from sqlalchemy.sql import func
+from sqlalchemy.orm import session
 
 from application import app, db
 from application.models import AllDepartments, AllEmployees, User
 
 
-# Home page
+# HOME page
 @app.route('/')
 @app.route('/index')
 def index():
@@ -18,7 +19,12 @@ def index():
 # LOGIN user
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """Check credentials sent by the user
+
+    """
     error = None
+    # Check if user want's to GET login page or submit data with POST request
+
     if request.method == 'POST':
         password = request.form['password']
         username = request.form['username']
@@ -27,40 +33,49 @@ def login():
         if len(username) <= 32 and len(password) <= 225:
 
             #  Check if User exits in the database
-            user = User.query.filter_by(username=username).first()
+            try:
+                user = User.query.filter_by(username=username).first()
+            except:
+                error = 'database query error'
+                return render_template('error.html', error=error), 500
             if user and check_password_hash(user.password, password):
                 login_user(user)
                 flash("Welcome " + user.username)
 
-                next_page = request.args.get('next')
+                # next_page = request.args.get('next')
 
-                return redirect(next_page)
+                return redirect('/index'), 302
             else:
                 flash('Wrong credentials')
-                return redirect(url_for('login'))
+                return redirect(url_for('login')), 302
         else:
             error = 'Enter correct username and password'
-            return render_template('error.html', error=error)
+            return render_template('error.html', error=error), 403
+    # If request method is GET
     return render_template('login.html',
                            error=error,
                            title="Log In")
 
 
-# Logout user
+# LOGOUT user
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
-    """Handles user logout"""
+    """Handles user logout
+
+    """
 
     logout_user()
     return redirect(url_for('index'))
 
 
-# Register new user
+# REGISTER new user
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    """User registration form
+    """Create user object and commit it to the database
 
+
+    user_object = User(username, password)
     username -- mandatory, up to 32 symbols
     password -- mandatory, will be hashed
     password2 -- mandatory, used only to check if a user entered desired password"""
@@ -87,7 +102,8 @@ def register():
                 db.session.add(new_user)
                 db.session.commit()
             except Exception:
-                return render_template('error.html', error="Database error. User was now created")
+                error = "Database error. User was now created"
+                return render_template('error.html', error=error), 500
             return redirect(url_for('login'))
     # Return registration form if request method is 'GET'
     return render_template('register.html',
@@ -95,7 +111,7 @@ def register():
                            )
 
 
-# All departments
+# All DEPARTMENTS
 @app.route('/departments')
 def departments():
     """List all existing departments"""
@@ -103,7 +119,8 @@ def departments():
     try:
         all_departments = AllDepartments.query.order_by(AllDepartments.id).all()
     except Exception:
-        return '<h1>Database query error<h1>', 500
+        error = 'Database query error'
+        return render_template('/error.html', error=error), 500
 
     return render_template('departments.html',
                            all_departments=all_departments,
@@ -111,7 +128,7 @@ def departments():
                            )
 
 
-# Generate specific department web-page
+# DEPARTMENT uniq web-page
 @app.route('/departments/<int:dep_id>')
 @login_required
 def department(dep_id):
@@ -119,17 +136,17 @@ def department(dep_id):
 
     try:
         department_info = AllDepartments.query.get(dep_id)
-        all_salaries = AllEmployees.query.filter_by(department_id=dep_id)
+        sum_salaries = db.session.query(func.sum(AllEmployees.salary)).filter_by(department_id=dep_id).first()
     except:
         return "Database Query Error", 500
     return render_template('department.html',
                            department_info=department_info,
-                           all_salaries=all_salaries,
+                           sum_salaries=sum_salaries[0],
                            title=f"{department_info.dep_name} Department"
                            )
 
 
-# ADD new department
+# ADD new Department
 @app.route('/departments/add-department', methods=['POST', 'GET'])
 @login_required
 def add_department():
@@ -178,7 +195,7 @@ def update_department(dep_id):
                            )
 
 
-# Delete department
+# DELETE department
 @app.route('/departments/<int:dep_id>/delete')
 @login_required
 def delete_department(dep_id):
@@ -199,7 +216,7 @@ def delete_department(dep_id):
         return render_template("error.html", error=error)
 
 
-# All company employees
+# All company EMPLOYEES
 @app.route('/employees')
 def employees():
     """Query information about all existing employees from a db. List them on one page."""
@@ -208,7 +225,7 @@ def employees():
     return render_template('employees.html', all_employees=all_employees)
 
 
-# Generate uniq page for each employee
+# EMPLOYEE uniq page
 @app.route('/employees/<int:emp_id>')
 @login_required
 def employee(emp_id):
@@ -289,7 +306,8 @@ def update_employee(emp_id):
 @app.route('/employees/<int:emp_id>/delete')
 @login_required
 def delete_employee(emp_id):
-    error = None
+    """Erase employee from a database"""
+
     # Chose the employee to delete from the db
     deleted = AllEmployees.query.get_or_404(emp_id)
     try:

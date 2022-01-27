@@ -17,12 +17,12 @@
        <p>Total employees: {{ department_info.dep_employees_id | count }}</p>
        <table>
            <tr>
-               <th>Total employees</th>
-               <th>Salaries</th>
+               <th>Total Employees</th>
+               <th>Total Salaries</th>
            </tr>
            <tr>
                <td> {{ department_info.dep_employees_id | count }} </td>
-               <td> {{ all_salaries}}</td>
+               <td> {{ sum_salaries }} </td>
            </tr>
 
        </table>

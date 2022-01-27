@@ -1,11 +1,11 @@
-"""This classes will specify database structure
+"""This classes specify database structure
 
 Classes:
     AllEmployees(db.Model)
     AllDepartments(db.Model)
     User(db.Model)
 
-If any Changes are made to the class, be sure
+If any Changes are made to the classes, be sure
 to perform database migration
 """
 

@@ -15,7 +15,7 @@ app.config['TESTING'] = True
 # Create Instance for SQLAlchemy database
 db = SQLAlchemy(app)
 
-# Initialize login manager class to handle user authentication and sessions.
+# Initialize Flask login manager class to handle user authentication and sessions.
 login_manager = LoginManager()
 login_manager.init_app(app)
 
